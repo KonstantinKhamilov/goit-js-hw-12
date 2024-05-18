@@ -10,6 +10,8 @@ const input = document.querySelector('#search-input');
 const gallery = document.querySelector('#gallery');
 const loader = document.querySelector('#loader'); // Добавлено
 
+let lightbox; // Объявите переменную lightbox здесь
+
 form.addEventListener('submit', event => {
   event.preventDefault();
   const query = input.value.trim();
@@ -27,10 +29,12 @@ form.addEventListener('submit', event => {
       loader.classList.add('hidden'); // Добавлено
 
       renderImages(images, gallery);
-      const lightbox = new SimpleLightbox('.image-card img', {
+
+      // Инициализируйте lightbox после добавления новых изображений
+      lightbox = new SimpleLightbox('.image-card a', {
         /* опции */
       });
-      lightbox.refresh();
+      input.value = '';
     })
     .catch(error => {
       console.error(error);
@@ -40,4 +44,10 @@ form.addEventListener('submit', event => {
           'Произошла ошибка при загрузке изображений. Пожалуйста, попробуйте еще раз.',
       });
     });
+});
+
+// Добавьте обработчик событий для клика по изображению
+gallery.addEventListener('click', event => {
+  if (event.target.nodeName !== 'IMG') return;
+  lightbox.show();
 });
