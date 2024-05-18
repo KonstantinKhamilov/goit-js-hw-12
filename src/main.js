@@ -8,33 +8,49 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 const form = document.querySelector('#search-form');
 const input = document.querySelector('#search-input');
 const gallery = document.querySelector('#gallery');
-const loader = document.querySelector('#loader'); // Добавлено
+const loader = document.querySelector('#loader');
+const loadMoreButton = document.querySelector('#load-more');
 
-let lightbox; // Объявите переменную lightbox здесь
+let currentPage = 1;
+let lightbox;
+let query = '';
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  const query = input.value.trim();
+  query = input.value.trim();
   if (!query) {
     alert('Пожалуйста, введите ключевое слово для поиска');
     return;
   }
 
-  // Показать индикатор загрузки
-  loader.classList.remove('hidden'); // Добавлено
+  currentPage = 1;
+  gallery.innerHTML = '';
+  fetchAndRenderImages();
+});
 
-  fetchImages(query)
+loadMoreButton.addEventListener('click', fetchAndRenderImages);
+
+function fetchAndRenderImages() {
+  loader.classList.remove('hidden');
+
+  fetchImages(query, currentPage++)
     .then(images => {
-      // Скрыть индикатор загрузки
-      loader.classList.add('hidden'); // Добавлено
+      console.log(images);
+      loader.classList.add('hidden');
 
       renderImages(images, gallery);
 
-      // Инициализируйте lightbox после добавления новых изображений
-      lightbox = new SimpleLightbox('.image-card a', {
-        /* опции */
-      });
-      input.value = '';
+      lightbox = new SimpleLightbox('.image-card a', {});
+
+      if (images.length === 15) {
+        loadMoreButton.style.display = 'block';
+      } else {
+        loadMoreButton.style.display = 'none';
+        iziToast.info({
+          title: 'Info',
+          message: "We're sorry, but you've reached the end of search results.",
+        });
+      }
     })
     .catch(error => {
       console.error(error);
@@ -44,10 +60,5 @@ form.addEventListener('submit', event => {
           'Произошла ошибка при загрузке изображений. Пожалуйста, попробуйте еще раз.',
       });
     });
-});
-
-// Добавьте обработчик событий для клика по изображению
-gallery.addEventListener('click', event => {
-  if (event.target.nodeName !== 'IMG') return;
-  lightbox.show();
-});
+  scrollToNextPage();
+}
