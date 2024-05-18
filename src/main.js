@@ -1,5 +1,5 @@
 import { fetchImages } from './js/pixabay-api.js';
-import { renderImages } from './js/render-functions.js';
+import { renderImages, scrollToNextPage } from './js/render-functions.js';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
@@ -51,6 +51,7 @@ function fetchAndRenderImages() {
           message: "We're sorry, but you've reached the end of search results.",
         });
       }
+      scrollToNextPage(); // Вызовите функцию scrollToNextPage после добавления изображений
     })
     .catch(error => {
       console.error(error);
@@ -60,5 +61,4 @@ function fetchAndRenderImages() {
           'Произошла ошибка при загрузке изображений. Пожалуйста, попробуйте еще раз.',
       });
     });
-  scrollToNextPage();
 }
