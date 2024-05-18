@@ -5,19 +5,30 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanilla App Template</title>
+    <!--<link rel="stylesheet" href="../node_modules/simplelightbox/dist/simple-lightbox.min.css" />-->
+
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <load ="partials/header.html" />
+
 
     <section>
       <h1>Example page title</h1>
       <!-- Path to images as from index.html file -->
       <img src="./img/javascript.svg" alt="" />
+
+      <!-- Form for image search -->
+      <form id="search-form">
+        <input id="search-input" type="text" placeholder="Введите ключевое слово для поиска">
+        <button type="submit">Поиск</button>
+      </form>
     </section>
 
-    <!-- Loads the specified .html file -->
-    <load ="partials/vite-promo.html" />
+    <ul id="gallery">
+      <!-- Images will be added here dynamically -->
+    </ul>
+    <div id="loader" class="hidden">Loading...</div>
+
 
     <script type="module" src="./main.js"></script>
   </body>
