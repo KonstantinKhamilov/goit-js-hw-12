@@ -19,23 +19,27 @@ form.addEventListener('submit', event => {
   event.preventDefault();
   query = input.value.trim();
   if (!query) {
-    alert('Пожалуйста, введите ключевое слово для поиска');
+    iziToast.warning({
+      title: 'Warning',
+      message: 'Пожалуйста, введите ключевое слово для поиска',
+    });
     return;
   }
 
   currentPage = 1;
   gallery.innerHTML = '';
   fetchAndRenderImages();
+  input.value = '';
 });
 
 loadMoreButton.addEventListener('click', fetchAndRenderImages);
 
 function fetchAndRenderImages() {
+  loadMoreButton.style.display = 'none';
   loader.classList.remove('hidden');
 
   fetchImages(query, currentPage++)
     .then(images => {
-      console.log(images);
       loader.classList.add('hidden');
 
       renderImages(images, gallery);
@@ -54,7 +58,6 @@ function fetchAndRenderImages() {
       scrollToNextPage(); // Вызовите функцию scrollToNextPage после добавления изображений
     })
     .catch(error => {
-      console.error(error);
       iziToast.error({
         title: 'Error',
         message:
